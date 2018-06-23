@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<!-- <script src="eureka.build.js"></script> -->
+<script src="util/TweenMax.min.js"></script>
+<script src="src/vector.js"></script>
+<script src="src/grid.js"></script>
+<style>
+  body {
+    background-color: rgba(189, 195, 199, 0.5);
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    border: solid thin #f5f6fa;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 5%;
+    height: 700px;
+    width: 1200px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+	   <svg height="700" width="1200"></svg>
+  </div>
+  <script>
+    // example of basic vector usage
+    let svg = document.querySelector('svg');
+
+    let grid = new Grid(svg, {
+      showOrigin: true
+    });
+
+    var v1 = new Vector([1, 4], {
+      showCoordinates: true,
+      stroke: '#26de81'
+    });
+
+    var v2 = new Vector([-5, -2], {
+      showCoordinates: true,
+      stroke: '#2bcbba',
+      type: 'point'
+    });
+
+    grid.addToView(v1);
+    grid.addToView(v2);
+  </script>
+</body>
+</html>
