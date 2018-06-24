@@ -1,7 +1,6 @@
 class Vector {
   constructor(coord, options) {
     this.coordLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    this.point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     this.arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     this.coord = { x: coord[0], y: coord[1] };
     this.translate(this.coord);
@@ -10,8 +9,10 @@ class Vector {
     this.ops = {
       showCoordinates: false,
       stroke: '#3b3b3b',
-      type: 'arrow',
       lineWidth: 2,
+      animate: true,
+      duration: 0.5,
+      ease: 'linear'
     }
 
     if (options) {
@@ -29,9 +30,6 @@ class Vector {
     }
     if (this.ops.showCoordinates) {
       this.setLabel();
-    }
-    if (this.ops.type == 'point') {
-      this.setPoint();
     }
   }
 
@@ -74,10 +72,17 @@ class Vector {
     this.coordLabel.setAttributeNS(null, 'fill', this.ops.stroke);
   }
 
-  setPoint() {
-    this.point.setAttributeNS(null, 'fill', this.ops.stroke);
-    this.point.setAttributeNS(null, 'cx', this.coord.x2);
-    this.point.setAttributeNS(null, 'cy', this.coord.y2);
-    this.point.setAttributeNS(null, 'r', 4);
+  addition(v, options) {
+    let ops = options;
+    let v1 = this;
+    let v2 = v;
+    if (v1.ops.animate || v2.ops.animate) {
+      setTimeout(function() {
+        sumVectors(v1, v2, ops);
+      }, (v.ops.duration * 2000));
+    }
+    else {
+      sumVectors(v1, v2, ops);
+    }
   }
 }
