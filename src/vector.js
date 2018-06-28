@@ -5,13 +5,9 @@ class Vector {
     this.coord = { x: coord[0], y: coord[1] };
     this.translate(this.coord);
     this.ipc = coord;
-    this.scalarInput;
-    this.xInput;
-    this.yInput;
 
     this.ops = {
       showCoordinates: false,
-      interactive: false,
       stroke: '#3b3b3b',
       lineWidth: 2,
       animate: true,
@@ -21,9 +17,6 @@ class Vector {
 
     if (options) {
       this.setOptions(options);
-    }
-    if (this.ops.interactive) {
-      this.setController();
     }
 
     this.arrow.setAttributeNS(null, 'stroke-width', this.ops.lineWidth);
@@ -77,74 +70,6 @@ class Vector {
     this.coordLabel.setAttributeNS(null, 'x', (this.coord.x2 + offset));
     this.coordLabel.setAttributeNS(null, 'y', this.coord.y2);
     this.coordLabel.setAttributeNS(null, 'fill', this.ops.stroke);
-  }
-
-  setController() {
-    let controllers = document.querySelector('.controllers');
-    let controller = document.createElement('div');
-    this.scalarInput = document.createElement('input');
-    this.xInput = document.createElement('input');
-    this.yInput = document.createElement('input');
-    let openBracket = document.createElement('p');
-    let closeBracket = document.createElement('p');
-    let comma = document.createElement('p');
-
-    controller.className = 'controller';
-    controller.append(this.scalarInput);
-    controller.append(openBracket);
-    controller.append(this.xInput);
-    controller.append(comma);
-    controller.append(this.yInput);
-    controller.append(closeBracket);
-
-    this.scalarInput.style.color = this.ops.stroke;
-    this.scalarInput.className = 'scalar';
-    this.scalarInput.type = 'number';
-    this.scalarInput.value = 1;
-
-    openBracket.className = 'open';
-    openBracket.textContent = '[';
-    closeBracket.className = 'close';
-    closeBracket.textContent = ']';
-
-    comma.className = 'comma';
-    comma.textContent = ',';
-
-    this.yInput.style.color = this.ops.stroke;
-    this.yInput.value = this.ipc[1];
-    this.yInput.type = 'number';
-    this.yInput.className = 'y';
-
-    this.xInput.style.color = this.ops.stroke;
-    this.xInput.value = this.ipc[0];
-    this.xInput.type = 'number';
-    this.xInput.className = 'x';
-
-    controller.style.color = this.ops.stroke;
-    controllers.append(controller);
-    this.configure(this);
-  }
-
-  configure(vector) {
-    let tl = new TimelineMax();
-
-    this.scalarInput.addEventListener('change', function(e) {
-      vector.coord.x2 = (600 + (50 * (e.target.value * vector.ipc[0])));
-      vector.coord.y2 = (350 - (50 * (e.target.value * vector.ipc[1])));
-      tl.to(vector.arrow, vector.ops.duration, { attr: { x2: vector.coord.x2, y2: vector.coord.y2  }, ease: easeFunctions[vector.ops.ease] });
-    });
-
-    this.xInput.addEventListener('change', function(e) {
-      vector.ipc[0] = e.target.value;
-      vector.coord.x2 = (600 + (50 * (vector.scalarInput.value * vector.ipc[0])));
-      tl.to(vector.arrow, vector.ops.duration, { attr: { x2: vector.coord.x2 }, ease: easeFunctions[vector.ops.ease] });
-    });
-
-    this.yInput.addEventListener('change', function(e) {
-      vector.ipc[1] = e.target.value;
-      vector.coord.y2 = (350 - (50 * (vector.scalarInput.value * vector.ipc[1])));
-      tl.to(vector.arrow, vector.ops.duration, { attr: { y2: vector.coord.y2  }, ease: easeFunctions[vector.ops.ease] });
-    });
   }
 
   addition(v, options) {
