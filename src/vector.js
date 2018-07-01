@@ -1,6 +1,7 @@
 class Vector {
   constructor(coord, options) {
     this.coordLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    this.point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     this.arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     this.coord = { x: coord[0], y: coord[1] };
     this.translate(this.coord);
@@ -9,8 +10,9 @@ class Vector {
     this.ops = {
       showCoordinates: false,
       stroke: '#3b3b3b',
+      type: 'arrow',
       lineWidth: 2,
-      animate: true,
+      animate: false,
       duration: 0.5,
       ease: 'linear'
     }
@@ -30,6 +32,9 @@ class Vector {
     }
     if (this.ops.showCoordinates) {
       this.setLabel();
+    }
+    if (this.ops.type == 'point') {
+      this.setPoint();
     }
   }
 
@@ -72,17 +77,31 @@ class Vector {
     this.coordLabel.setAttributeNS(null, 'fill', this.ops.stroke);
   }
 
-  addition(v, options) {
-    let ops = options;
-    let v1 = this;
-    let v2 = v;
-    if (v1.ops.animate || v2.ops.animate) {
-      setTimeout(function() {
-        sumVectors(v1, v2, ops);
-      }, (v.ops.duration * 2000));
+  setPoint() {
+    this.point.setAttributeNS(null, 'fill', this.ops.stroke);
+    this.point.setAttributeNS(null, 'cx', this.coord.x2);
+    this.point.setAttributeNS(null, 'cy', this.coord.y2);
+    this.point.setAttributeNS(null, 'r', 3);
+  }
+
+  transform(landing, ops) {
+    var duration = 2;
+    var delay = 0;
+
+    if (ops) {
+      duration = ops.duration;
+      delay = ops.delay;
+    }
+
+    this.coord.x2 = (600 + (50 * landing[0]));
+    this.coord.y2 = (350 - (50 * landing[1]));
+
+    let tl = new TimelineMax();
+    if (this.ops.type == 'arrow') {
+      tl.to(this.arrow, duration, { attr: { x2: this.coord.x2, y2: this.coord.y2 }, delay: delay, ease: easeFunctions['ease-out'] });
     }
     else {
-      sumVectors(v1, v2, ops);
+      tl.to(this.point, duration, { attr: { cx: this.coord.x2, cy: this.coord.y2 }, delay: delay, ease: easeFunctions['ease-out'] });
     }
   }
 }
