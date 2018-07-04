@@ -7,6 +7,8 @@ class Vector {
     this.translate(this.coord);
     this.ipc = coord;
 
+    this.tl = new TimelineMax();
+
     this.ops = {
       showCoordinates: false,
       stroke: '#3b3b3b',
@@ -96,12 +98,11 @@ class Vector {
     this.coord.x2 = (600 + (50 * landing[0]));
     this.coord.y2 = (350 - (50 * landing[1]));
 
-    let tl = new TimelineMax();
     if (this.ops.type == 'arrow') {
-      tl.to(this.arrow, duration, { attr: { x2: this.coord.x2, y2: this.coord.y2 }, delay: delay, ease: easeFunctions['ease-out'] });
+      this.tl.to(this.arrow, duration, { attr: { x2: this.coord.x2, y2: this.coord.y2 }, delay: delay, ease: easeFunctions['sine-ease-in-out'] });
     }
     else {
-      tl.to(this.point, duration, { attr: { cx: this.coord.x2, cy: this.coord.y2 }, delay: delay, ease: easeFunctions['ease-out'] });
+      this.tl.to(this.point, duration, { attr: { cx: this.coord.x2, cy: this.coord.y2 }, delay: delay, ease: easeFunctions['sine-ease-in-out'] });
     }
   }
 }
