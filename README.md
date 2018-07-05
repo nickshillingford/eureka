@@ -32,4 +32,5 @@ grid.addToView(v3);
 
 ```
 
-![Eureka vector](https://firebasestorage.googleapis.com/v0/b/web-demo-2188e.appspot.com/o/example.png?alt=media&token=59a9745c-dea1-4001-9085-8f20f8968d7d)
+
+![Eureka vector](https://firebasestorage.googleapis.com/v0/b/web-demo-2188e.appspot.com/o/example.png?alt=media&token=f475bdd3-141b-411e-9840-7d54cc77e62b)
