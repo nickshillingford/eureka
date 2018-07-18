@@ -1,5 +1,6 @@
 class Vector {
   constructor(coord, options) {
+    this.rotationPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.coordLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     this.point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     this.arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -8,10 +9,12 @@ class Vector {
     this.ipc = coord;
 
     this.tl = new TimelineMax();
+    this.setRotationPath();
 
     this.ops = {
       showCoordinates: false,
-      stroke: '#3b3b3b',
+      showRotatePath: false,
+      stroke: '#ecf0f1',
       type: 'arrow',
       lineWidth: 2,
       animate: false,
@@ -34,6 +37,9 @@ class Vector {
     }
     if (this.ops.showCoordinates) {
       this.setLabel();
+    }
+    if (this.ops.showRotatePath) {
+      this.rotationPath.setAttributeNS(null, 'opacity', 1);
     }
     if (this.ops.type == 'point') {
       this.setPoint();
@@ -104,5 +110,29 @@ class Vector {
     else {
       this.tl.to(this.point, duration, { attr: { cx: this.coord.x2, cy: this.coord.y2 }, delay: delay, ease: easeFunctions['sine-ease-in-out'] });
     }
+  }
+
+  magnitude() {
+    let x_squared = Math.pow(this.ipc[0], 2);
+    let y_squared = Math.pow(this.ipc[1], 2);
+    let sum = (x_squared + y_squared);
+
+    return Math.sqrt(sum).toFixed(2);
+  }
+
+  setRotationPath() {
+    let magnitude = this.magnitude().toString();
+    let offset = parseInt(magnitude.substring(2, 4));
+    let scale = parseInt(magnitude.substring(0, 1));
+    let percent = ((offset / 100) * 50);
+    let radius = ((scale * 50) + percent);
+
+    let path = arc(600, 350, radius, 0, 359);
+
+    this.rotationPath.setAttributeNS(null, 'stroke-width', 2);
+    this.rotationPath.setAttributeNS(null, 'stroke', '#fff');
+    this.rotationPath.setAttributeNS(null, 'fill', 'none');
+    this.rotationPath.setAttributeNS(null, 'opacity', 0);
+    this.rotationPath.setAttributeNS(null, 'd', path);
   }
 }
