@@ -15,6 +15,31 @@ let easeFunctions = {
   'circ-ease-in-out': Circ.easeInOut
 };
 
+function cartesian(center_x, center_y, radius, degrees) {
+    let radians = (degrees - 90) * Math.PI / 180.0;
+
+    return {
+      x: center_x + (radius * Math.cos(radians)),
+      y: center_y + (radius * Math.sin(radians))
+    }
+}
+
+function arc(x, y, radius, start_angle, end_angle) {
+    let start = cartesian(x, y, radius, end_angle);
+    let end = cartesian(x, y, radius, start_angle);
+
+    let laf = (end_angle - start_angle) <= 180 ? '0' : '1';
+
+    var path = [
+        'M', start.x, start.y,
+        'A', radius, radius, 0, laf, 0, end.x, end.y
+    ].join(' ');
+
+    path += (end_angle == 359) ? 'Z' : '';
+
+    return path;
+}
+
 function multiply(m1, m2) {
   let x = ((m1[0][0] * m2[0]) + (m1[0][1] * m2[1]));
   let y = ((m1[1][0] * m2[0]) + (m1[1][1] * m2[1]));
@@ -24,3 +49,4 @@ function multiply(m1, m2) {
 function determinant(m) {
   return ((m[1][1] * m[0][0]) - (m[1][0] * m[0][1]));
 }
+
