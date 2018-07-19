@@ -40,13 +40,20 @@ function arc(x, y, radius, start_angle, end_angle) {
     return path;
 }
 
+function _dot(v1, v2) {
+  let p1 = (v1.ipc[0] * v2.ipc[0]);
+  let p2 = (v1.ipc[1] * v2.ipc[1]);
+
+  return (p1 + p2);
+}
+
 function multiply(m1, m2) {
   let x = ((m1[0][0] * m2[0]) + (m1[0][1] * m2[1]));
   let y = ((m1[1][0] * m2[0]) + (m1[1][1] * m2[1]));
+
   return [x, y];
 }
 
 function determinant(m) {
   return ((m[1][1] * m[0][0]) - (m[1][0] * m[0][1]));
 }
-
