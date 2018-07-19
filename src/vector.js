@@ -8,8 +8,8 @@ class Vector {
     this.translate(this.coord);
     this.ipc = coord;
 
+    this.radius = this.setRotationPath();
     this.tl = new TimelineMax();
-    this.setRotationPath();
 
     this.ops = {
       showCoordinates: false,
@@ -103,6 +103,7 @@ class Vector {
 
     this.coord.x2 = (600 + (50 * landing[0]));
     this.coord.y2 = (350 - (50 * landing[1]));
+    this.ipc = landing;
 
     if (this.ops.type == 'arrow') {
       this.tl.to(this.arrow, duration, { attr: { x2: this.coord.x2, y2: this.coord.y2 }, delay: delay, ease: easeFunctions['sine-ease-in-out'] });
@@ -110,6 +111,45 @@ class Vector {
     else {
       this.tl.to(this.point, duration, { attr: { cx: this.coord.x2, cy: this.coord.y2 }, delay: delay, ease: easeFunctions['sine-ease-in-out'] });
     }
+  }
+
+  rotate(amount_degrees) {
+    var theta_radians = -Math.atan2(this.sine(), this.cosine());
+    var theta_degrees = (theta_radians * (180 / Math.PI));
+    var delta = 0.017, x, y;
+
+    var stop = Math.round(theta_degrees + (-amount_degrees));
+    var _this = this;
+
+    var anim = setInterval(function() {
+      // todo: if the degree amount is negative, apply += instead.
+      theta_radians -= delta;
+
+      x = Math.cos(theta_radians) * _this.radius + 600;
+      y = Math.sin(theta_radians) * _this.radius + 350;
+
+      _this.arrow.setAttributeNS(null, 'x2', x);
+      _this.arrow.setAttributeNS(null, 'y2', y);
+
+      theta_degrees = Math.round((theta_radians * (180 / Math.PI)));
+      (theta_degrees == stop) ? clearInterval(anim) : console.log();
+      // todo: update the vector's ipc coordinates when anim is done.
+    }, 25);
+  }
+
+  cosine() {
+    let adjacent = new Vector([this.ipc[0], 0]);
+
+    let mag_1 = this.magnitude();
+    let mag_2 = adjacent.magnitude();
+    let dot = _dot(this, adjacent);
+
+    return (dot / (mag_1 * mag_2));
+  }
+
+  sine() {
+    // use the pythagorean identity to calculate sine given cosine
+    return Math.sqrt((1 - Math.pow(this.cosine(), 2)));
   }
 
   magnitude() {
@@ -134,5 +174,7 @@ class Vector {
     this.rotationPath.setAttributeNS(null, 'fill', 'none');
     this.rotationPath.setAttributeNS(null, 'opacity', 0);
     this.rotationPath.setAttributeNS(null, 'd', path);
+
+    return radius;
   }
 }
