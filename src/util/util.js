@@ -40,11 +40,11 @@ function arc(x, y, radius, start_angle, end_angle) {
     return path;
 }
 
-function _dot(v1, v2) {
+function dotProduct(v1, v2) {
   let p1 = (v1.ipc[0] * v2.ipc[0]);
   let p2 = (v1.ipc[1] * v2.ipc[1]);
 
-  return (p1 + p2);
+  return Math.round((p1 + p2));
 }
 
 function multiply(m1, m2) {
