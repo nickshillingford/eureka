@@ -16,7 +16,7 @@ class Light {
       stroke: 'rgba(127, 140, 141, 0.8)',
       lineWidth: 3
     });
-    this.glow = new Vector([v1.ipc[0], (v1.ipc[1] + offset)], {
+    this.glow = new Vector([v1.ipc[0], (v1.ipc[1] + 0.05)], {
       stroke: 'rgba(252, 232, 131, 1)',
       lineWidth: 1.9
     });
