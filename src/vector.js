@@ -16,10 +16,7 @@ class Vector {
       showRotatePath: false,
       stroke: '#ecf0f1',
       type: 'arrow',
-      lineWidth: 2,
-      animate: false,
-      duration: 0.5,
-      ease: 'linear'
+      lineWidth: 2
     }
 
     if (options) {
@@ -142,9 +139,9 @@ class Vector {
 
     let mag_1 = this.magnitude();
     let mag_2 = adjacent.magnitude();
-    let dot = _dot(this, adjacent);
+    let dp = dotProduct(this, adjacent);
 
-    return (dot / (mag_1 * mag_2));
+    return (dp / (mag_1 * mag_2));
   }
 
   sine() {
