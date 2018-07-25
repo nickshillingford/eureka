@@ -10,6 +10,7 @@ class Grid {
     this.tl = new TimelineMax();
 
     this.ops = {
+      cartesian: false,
       points: false,
       basis: false
     }
@@ -33,6 +34,30 @@ class Grid {
     for (let key in options) {
       this.ops[key] = options[key];
     }
+  }
+
+  setCartesian() {
+    let x_axis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    let y_axis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+    x_axis.setAttributeNS(null, 'stroke-linecap', 'round');
+    x_axis.setAttributeNS(null, 'stroke', '#4b4b4b');
+    x_axis.setAttributeNS(null, 'stroke-width', 3);
+    x_axis.setAttributeNS(null, 'x1', 350);
+    x_axis.setAttributeNS(null, 'y1', 350);
+    x_axis.setAttributeNS(null, 'x2', 850);
+    x_axis.setAttributeNS(null, 'y2', 350);
+
+    y_axis.setAttributeNS(null, 'stroke-linecap', 'round');
+    y_axis.setAttributeNS(null, 'stroke', '#4b4b4b');
+    y_axis.setAttributeNS(null, 'stroke-width', 3);
+    y_axis.setAttributeNS(null, 'x1', 600);
+    y_axis.setAttributeNS(null, 'y1', 100);
+    y_axis.setAttributeNS(null, 'x2', 600);
+    y_axis.setAttributeNS(null, 'y2', 600);
+
+    this.grid.append(x_axis);
+    this.grid.append(y_axis);
   }
 
   setBasis() {
@@ -80,7 +105,7 @@ class Grid {
   }
 
   createGrid(axis) {
-    let unitGap = 50;
+   let unitGap = 50;
 
     var x1 = 0;
     var y1 = 0;
@@ -103,18 +128,17 @@ class Grid {
       line.setAttributeNS(null, 'y1', y1);
       line.setAttributeNS(null, 'x2', x2);
       line.setAttributeNS(null, 'y2', y2);
-
       this.grid.append(line);
 
-      if (axis) {
-	x1 += unitGap;
-	x2 += unitGap;
-      }
-      else {
-	y1 += unitGap;
-	y2 += unitGap;
-      }
+    if (axis) {
+      x1 += unitGap;
+      x2 += unitGap;
     }
+    else {
+      y1 += unitGap;
+      y2 += unitGap;
+    }
+   }
   }
 
   addToView(obj) {
@@ -126,18 +150,17 @@ class Grid {
       case 'point':
         this.grid.append(obj.point);
         break;
-      default:
+      case 'arrow':
         this.grid.append(obj.arrow);
         this.grid.append(obj.rotationPath);
+        break;
+      case 'square':
+        this.grid.append(obj.unit);
+        break;
     }
 
-    if (obj.ops.animate) {
-      if (obj.ops.type == 'arrow') {
-        this.tl.from(obj.arrow, obj.ops.duration, { attr: { x2: this.originX, y2: this.originY }, ease: easeFunctions[obj.ops.ease] });
-      }
-      else {
-        this.tl.from(obj.point, obj.ops.duration, { attr: { r: 0 }, ease: easeFunctions[obj.ops.ease] });
-      }
+    if (this.ops.cartesian) {
+      this.setCartesian();
     }
   }
 }
