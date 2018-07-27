@@ -1,20 +1,41 @@
+/**
+ * This class represents a vector object and it's appearance/style.
+ * This class also implements a few standard vector operations.
+ *
+ * @class Vector
+ */
 class Vector {
   constructor(coord, options) {
+    // circle representing the path the vector takes when rotated.
     this.rotationPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+    // the (x, y) coordinates of the vector.
     this.coordLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+    // the vector represented as a point on the grid instead of an arrow.
     this.point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+    // the vector represented as an arrow on the grid instead of a point.
     this.arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+    // the vectors coordinates on the grid.
     this.coord = { x: coord[0], y: coord[1] };
     this.translate(this.coord);
+
+    // the vectors non-translated cartesian coordinates.
     this.ipc = coord;
 
+    // the radius of the vectors rotation path.
     this.radius = this.setRotationPath();
+
+    // GSAP animation object.
     this.tl = new TimelineMax();
 
+    // the vector's default options.
     this.ops = {
       showCoordinates: false,
       showRotatePath: false,
-      stroke: '#ecf0f1',
+      stroke: '#3b3b3b',
       type: 'arrow',
       lineWidth: 2
     }
@@ -28,6 +49,13 @@ class Vector {
     this.setArrow();
   }
 
+  /**
+   * Updates the vector's default options with any custom options that are given.
+   *
+   * @name setOptions
+   * @param {options} custom options.
+   * @return none
+   */
   setOptions(options) {
     for (let key in options) {
       this.ops[key] = options[key];
@@ -43,6 +71,13 @@ class Vector {
     }
   }
 
+  /**
+   * Translates the vector's cartesian coordinates into the proper SVG coordinates.
+   *
+   * @name translate
+   * @param {v} cartesian coordinates.
+   * @return none
+   */
   translate(v) {
     this.coord = { x1: 600, y1: 350, x2: (600 + (50 * v.x)), y2: (350 - (50 * v.y)) };
     this.arrow.setAttributeNS(null, 'x1', this.coord.x1);
@@ -51,6 +86,13 @@ class Vector {
     this.arrow.setAttributeNS(null, 'y2', this.coord.y2);
   }
 
+  /**
+   * Builds the appearance of the vector's arrow.
+   *
+   * @name setArrow
+   * @param none
+   * @return none
+   */
   setArrow() {
     let marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
     let path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -74,6 +116,13 @@ class Vector {
     this.arrow.setAttributeNS(null, 'marker-end', 'url(#arrow' + num + ')');
   }
 
+  /**
+   * Sets the text label of the vector's coordinates.
+   *
+   * @name setLabel
+   * @param none
+   * @return none
+   */
   setLabel() {
     let offset = (this.ipc[0] < 0) ? -64 : 12;
     this.coordLabel.textContent = '( ' + this.ipc[0] + ', ' + this.ipc[1] + ' )';
@@ -82,6 +131,13 @@ class Vector {
     this.coordLabel.setAttributeNS(null, 'fill', this.ops.stroke);
   }
 
+  /**
+   * Builds the appearance of the vector's circle point.
+   *
+   * @name setPoint
+   * @param none
+   * @return none
+   */
   setPoint() {
     this.point.setAttributeNS(null, 'fill', this.ops.stroke);
     this.point.setAttributeNS(null, 'cx', this.coord.x2);
@@ -89,6 +145,14 @@ class Vector {
     this.point.setAttributeNS(null, 'r', 3);
   }
 
+  /**
+   * Performs a transformation on the vector.
+   *
+   * @name transform
+   * @param [landing] an array of cartesian coordinates for where the vector will land.
+   * @param {ops} animation options.
+   * @return none
+   */
   transform(landing, ops) {
     var duration = 2;
     var delay = 0;
@@ -110,6 +174,13 @@ class Vector {
     }
   }
 
+  /**
+   * Rotates the vector by a specified amount.
+   *
+   * @name rotate
+   * @param (amount_degrees) the degree to rotate to.
+   * @return none
+   */
   rotate(amount_degrees) {
     var theta_radians = -Math.atan2(this.sine(), this.cosine());
     var theta_degrees = (theta_radians * (180 / Math.PI));
@@ -134,6 +205,13 @@ class Vector {
     }, 25);
   }
 
+  /**
+   * Calculates the cosine of the vector's angle.
+   *
+   * @name cosine
+   * @param none
+   * @return a number between -1 and 1 inclusive.
+   */
   cosine() {
     let adjacent = new Vector([this.ipc[0], 0]);
 
@@ -144,11 +222,25 @@ class Vector {
     return (dp / (mag_1 * mag_2));
   }
 
+  /**
+   * Calculates the sine of the vector's angle.
+   *
+   * @name sine
+   * @param none
+   * @return a number between -1 and 1 inclusive.
+   */
   sine() {
     // use the pythagorean identity to calculate sine given cosine
     return Math.sqrt((1 - Math.pow(this.cosine(), 2)));
   }
 
+  /**
+   * Calculates the magnitude (length) of the vector.
+   *
+   * @name magnitude
+   * @param none
+   * @return a number.
+   */
   magnitude() {
     let x_squared = Math.pow(this.ipc[0], 2);
     let y_squared = Math.pow(this.ipc[1], 2);
@@ -157,6 +249,13 @@ class Vector {
     return Math.sqrt(sum).toFixed(2);
   }
 
+  /**
+   * Calculates and builds the rotation path circle.
+   *
+   * @name setRotationPath
+   * @param none
+   * @return a number representing the circle's radius.
+   */
   setRotationPath() {
     let magnitude = this.magnitude().toString();
     let offset = parseInt(magnitude.substring(2, 4));
