@@ -40,6 +40,13 @@ function arc(x, y, radius, start_angle, end_angle) {
     return path;
 }
 
+/**
+ * Computes the dot product of two vectors.
+ *
+ * @name dotProduct
+ * @param Vector (v1, v2) two vector objects.
+ * @return a single scalar value.
+ */
 function dotProduct(v1, v2) {
   let p1 = (v1.ipc[0] * v2.ipc[0]);
   let p2 = (v1.ipc[1] * v2.ipc[1]);
@@ -47,6 +54,13 @@ function dotProduct(v1, v2) {
   return Math.round((p1 + p2));
 }
 
+/**
+ * Performs 2x2 matrix multiplication.
+ *
+ * @name multiply
+ * @param [m1, m2] two 2x2 matrices.
+ * @return a single vector.
+ */
 function multiply(m1, m2) {
   let x = ((m1[0][0] * m2[0]) + (m1[0][1] * m2[1]));
   let y = ((m1[1][0] * m2[0]) + (m1[1][1] * m2[1]));
@@ -54,6 +68,13 @@ function multiply(m1, m2) {
   return [x, y];
 }
 
+/**
+ * Computes the determinant of a 2x2 matrix.
+ *
+ * @name determinant
+ * @param [m] a 2x2 matrix.
+ * @return a single number.
+ */
 function determinant(m) {
   return ((m[1][1] * m[0][0]) - (m[1][0] * m[0][1]));
 }
